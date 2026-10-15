@@ -13,7 +13,7 @@ class RegistroJaCadastradoException(ProfissionalJaCadastradoException):
             mensagem = f"Já existe um profissional cadastrado com o Registro Profissional '{registro}'."
         else:
             mensagem = "Já existe um profissional cadastrado com este Registro Profissional."
-        super(ProfissionalJaCadastradoException, self).__init__(mensagem)
+        super().__init__(mensagem)
 
 
 class CpfJaCadastradoException(ProfissionalJaCadastradoException):
@@ -22,4 +22,4 @@ class CpfJaCadastradoException(ProfissionalJaCadastradoException):
             mensagem = f"Já existe um profissional cadastrado com o CPF '{cpf}'."
         else:
             mensagem = "Já existe um profissional cadastrado com este CPF."
-        super(ProfissionalJaCadastradoException, self).__init__(mensagem)
+        super().__init__(mensagem)

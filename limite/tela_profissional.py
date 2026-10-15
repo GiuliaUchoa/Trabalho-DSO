@@ -8,7 +8,7 @@ class TelaProfissional(Tela):
         print("=" * 30)
         print("1 - Cadastrar Profissional")
         print("2 - Excluir Profissional")
-        print("3 - Atualizar Profissional")
+        print("3 - Alterar Profissional")
         print("4 - Listar Profissionais")
         print("5 - Buscar Profissional")
         print("0 - Retornar")
@@ -40,9 +40,6 @@ class TelaProfissional(Tela):
     def buscar_profissional(self) -> str:
         print("\n--- Busca de Profissional ---")
         return input("Digite o Registro Profissional: ").strip()
-
-    def buscar_por_cpf(self) -> str:
-        return input("Digite o CPF do Profissional: ").strip()
 
     def coletar_novos_dados(self) -> dict:
         print("\n--- Atualização de Profissional ---")
