@@ -1,5 +1,4 @@
 from typing import Optional
-from controle.controlador import Controlador
 from entidade.profissional_saude import ProfissionalSaude
 from limite.tela_profissional import TelaProfissional
 from excecoes.profissional_ja_cadastrado_exception import (
@@ -11,11 +10,15 @@ from excecoes.profissional_nao_encontrado_exception import ProfissionalNaoEncont
 from excecoes.dado_invalido_exception import DadoInvalidoException
 
 
-class ControladorProfissionais(Controlador):
+class ControladorProfissionais:
     def __init__(self, controlador_sistema=None):
-        super().__init__(controlador_sistema)
+        self.__controlador_sistema = controlador_sistema
         self.__profissionais: list[ProfissionalSaude] = []
         self.__tela_profissional = TelaProfissional()
+
+    @property
+    def controlador_sistema(self):
+        return self.__controlador_sistema
 
     @property
     def profissionais(self) -> list[ProfissionalSaude]:
@@ -24,6 +27,9 @@ class ControladorProfissionais(Controlador):
     @property
     def tela_profissional(self) -> TelaProfissional:
         return self.__tela_profissional
+
+    def retornar(self) -> None:
+        pass
 
     def buscar_profissional(self, registro_profissional: str) -> Optional[ProfissionalSaude]:
         if not registro_profissional:

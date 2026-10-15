@@ -1,6 +1,5 @@
 from datetime import time
 from typing import Optional
-from controle.controlador import Controlador
 from entidade.clinica import Clinica
 from limite.tela_clinica import TelaClinica
 from excecoes.clinica_ja_cadastrada_exception import ClinicaJaCadastradaException
@@ -9,11 +8,15 @@ from excecoes.horario_invalido_exception import HorarioInvalidoException
 from excecoes.dado_invalido_exception import DadoInvalidoException
 
 
-class ControladorClinica(Controlador):
+class ControladorClinica:
     def __init__(self, controlador_sistema=None):
-        super().__init__(controlador_sistema)
+        self.__controlador_sistema = controlador_sistema
         self.__clinicas: list[Clinica] = []
         self.__tela_clinica = TelaClinica()
+
+    @property
+    def controlador_sistema(self):
+        return self.__controlador_sistema
 
     @property
     def clinicas(self) -> list[Clinica]:
@@ -22,6 +25,9 @@ class ControladorClinica(Controlador):
     @property
     def tela_clinica(self) -> TelaClinica:
         return self.__tela_clinica
+
+    def retornar(self) -> None:
+        pass
 
     def buscar_clinica(self, nome: Optional[str] = None) -> Optional[Clinica]:
         """

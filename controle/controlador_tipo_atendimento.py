@@ -1,4 +1,3 @@
-from controle.controlador import Controlador
 from entidade.tipo_atendimento import TipoAtendimento
 from limite.tela_tipo_atendimento import TelaTipoAtendimento
 from excecoes.tipo_atendimento_ja_cadastrado_exception import TipoAtendimentoJaCadastradoException
@@ -6,11 +5,15 @@ from excecoes.tipo_atendimento_nao_encontrado_exception import TipoAtendimentoNa
 from excecoes.dado_invalido_exception import DadoInvalidoException
 
 
-class ControladorTipoAtendimento(Controlador):
+class ControladorTipoAtendimento:
     def __init__(self, controlador_sistema=None):
-        super().__init__(controlador_sistema)
+        self.__controlador_sistema = controlador_sistema
         self.__tipos_atendimentos = []
         self.__tela_tipo_atendimento = TelaTipoAtendimento()
+
+    @property
+    def controlador_sistema(self):
+        return self.__controlador_sistema
 
     @property
     def tipos_atendimentos(self):
@@ -19,6 +22,9 @@ class ControladorTipoAtendimento(Controlador):
     @property
     def tela_tipo_atendimento(self):
         return self.__tela_tipo_atendimento
+
+    def retornar(self) -> None:
+        pass
 
     def buscar_tipo_atendimento(self, nome_tipo: str):
         if not nome_tipo:

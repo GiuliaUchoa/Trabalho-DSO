@@ -1,7 +1,4 @@
-from limite.tela import Tela
-
-
-class TelaProfissional(Tela):
+class TelaProfissional:
     def opcoes_tela(self) -> int:
         print("\n" + "=" * 30)
         print("    PROFISSIONAIS DE SAÚDE")
@@ -16,11 +13,24 @@ class TelaProfissional(Tela):
         return self.le_numero_inteiro("Escolha a opção: ", [0, 1, 2, 3, 4, 5])
 
     def tela_opcoes(self) -> int:
-        # Garante compatibilidade com a assinatura abstrata da superclasse Tela
         return self.opcoes_tela()
+
+    def mostra_mensagem(self, mensagem: str) -> None:
+        print(f"\n{mensagem}")
 
     def mostrar_mensagem(self, mensagem: str) -> None:
         self.mostra_mensagem(mensagem)
+
+    def le_numero_inteiro(self, mensagem: str = "Escolha a opção: ", intervalo_valido: list[int] = None) -> int:
+        while True:
+            try:
+                valor = int(input(mensagem))
+                if intervalo_valido is not None and valor not in intervalo_valido:
+                    print(f"Opção inválida! Escolha entre {intervalo_valido}.")
+                    continue
+                return valor
+            except ValueError:
+                print("Valor inválido! Digite apenas números inteiros.")
 
     def coletar_dados(self) -> dict:
         print("\n--- Cadastro de Profissional de Saúde ---")

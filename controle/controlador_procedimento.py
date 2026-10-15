@@ -1,4 +1,3 @@
-from controle.controlador import Controlador
 from entidade.procedimento import Procedimento
 from limite.tela_procedimento import TelaProcedimento
 from excecoes.procedimento_ja_cadastrado_exception import ProcedimentoJaCadastradoException
@@ -7,11 +6,28 @@ from excecoes.profissional_nao_encontrado_exception import ProfissionalNaoEncont
 from excecoes.dado_invalido_exception import DadoInvalidoException
 
 
-class ControladorProcedimento(Controlador):
-    def __init__(self, controlador_sistema=None):
-        super().__init__(controlador_sistema)
+class ControladorProcedimento:
+    def __init__(self, controlador_profissionais=None, controlador_sistema=None):
+        if hasattr(controlador_profissionais, "buscar_profissional"):
+            self.__controlador_profissionais = controlador_profissionais
+            self.__controlador_sistema = controlador_sistema
+        else:
+            self.__controlador_sistema = controlador_profissionais or controlador_sistema
+            self.__controlador_profissionais = None
         self.__procedimentos = []
         self.__tela_procedimento = TelaProcedimento()
+
+    @property
+    def controlador_profissionais(self):
+        if self.__controlador_profissionais is not None:
+            return self.__controlador_profissionais
+        if self.__controlador_sistema is not None:
+            return getattr(self.__controlador_sistema, "controlador_profissional", None) or getattr(self.__controlador_sistema, "controlador_profissionais", None)
+        return None
+
+    @property
+    def controlador_sistema(self):
+        return self.__controlador_sistema
 
     @property
     def procedimentos(self):
@@ -20,6 +36,9 @@ class ControladorProcedimento(Controlador):
     @property
     def tela_procedimento(self):
         return self.__tela_procedimento
+
+    def retornar(self) -> None:
+        pass
 
     def buscar_procedimento(self, nome: str):
         if not nome:
@@ -93,10 +112,9 @@ class ControladorProcedimento(Controlador):
             registro = dados["registro_profissional"]
 
             profissional = None
-            if self.controlador_sistema is not None:
-                ctrl_prof = getattr(self.controlador_sistema, "controlador_profissional", None) or getattr(self.controlador_sistema, "controlador_profissionais", None)
-                if ctrl_prof is not None:
-                    profissional = ctrl_prof.buscar_profissional(registro)
+            ctrl_prof = self.controlador_profissionais
+            if ctrl_prof is not None:
+                profissional = ctrl_prof.buscar_profissional(registro)
 
             if profissional is None:
                 raise ProfissionalNaoEncontradoException(registro)
@@ -135,10 +153,9 @@ class ControladorProcedimento(Controlador):
             if "registro_profissional" in novos_dados:
                 registro = novos_dados["registro_profissional"]
                 profissional = None
-                if self.controlador_sistema is not None:
-                    ctrl_prof = getattr(self.controlador_sistema, "controlador_profissional", None) or getattr(self.controlador_sistema, "controlador_profissionais", None)
-                    if ctrl_prof is not None:
-                        profissional = ctrl_prof.buscar_profissional(registro)
+                ctrl_prof = self.controlador_profissionais
+                if ctrl_prof is not None:
+                    profissional = ctrl_prof.buscar_profissional(registro)
 
                 if profissional is None:
                     raise ProfissionalNaoEncontradoException(registro)

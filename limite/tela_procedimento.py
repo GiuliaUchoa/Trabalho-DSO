@@ -1,7 +1,4 @@
-from limite.tela import Tela
-
-
-class TelaProcedimento(Tela):
+class TelaProcedimento:
     def opcoes_tela(self):
         print("\n" + "=" * 30)
         print("        PROCEDIMENTOS")
@@ -18,8 +15,22 @@ class TelaProcedimento(Tela):
     def tela_opcoes(self):
         return self.opcoes_tela()
 
-    def mostrar_mensagem(self, mensagem):
+    def mostra_mensagem(self, mensagem: str) -> None:
+        print(f"\n{mensagem}")
+
+    def mostrar_mensagem(self, mensagem: str) -> None:
         self.mostra_mensagem(mensagem)
+
+    def le_numero_inteiro(self, mensagem: str = "Escolha a opção: ", intervalo_valido: list[int] = None) -> int:
+        while True:
+            try:
+                valor = int(input(mensagem))
+                if intervalo_valido is not None and valor not in intervalo_valido:
+                    print(f"Opção inválida! Escolha entre {intervalo_valido}.")
+                    continue
+                return valor
+            except ValueError:
+                print("Valor inválido! Digite apenas números inteiros.")
 
     def seleciona_procedimento(self):
         print("\n--- Selecionar Procedimento ---")
