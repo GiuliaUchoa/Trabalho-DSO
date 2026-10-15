@@ -3,9 +3,7 @@ from excecoes.clinica_nao_encontrada_exception import ClinicaNaoEncontradaExcept
 from excecoes.horario_invalido_exception import HorarioInvalidoException
 from excecoes.dado_invalido_exception import DadoInvalidoException
 from excecoes.profissional_ja_cadastrado_exception import (
-    ProfissionalJaCadastradoException,
-    RegistroJaCadastradoException,
-    CpfJaCadastradoException,
+    ProfissionalJaCadastradoException
 )
 from excecoes.profissional_nao_encontrado_exception import ProfissionalNaoEncontradoException
 from excecoes.procedimento_ja_cadastrado_exception import ProcedimentoJaCadastradoException

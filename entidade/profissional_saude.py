@@ -1,10 +1,5 @@
-from typing import TYPE_CHECKING, Optional
 from entidade.pessoa import Pessoa
 from excecoes.dado_invalido_exception import DadoInvalidoException
-
-if TYPE_CHECKING:
-    from entidade.clinica import Clinica
-
 
 class ProfissionalSaude(Pessoa):
     def __init__(
@@ -14,19 +9,15 @@ class ProfissionalSaude(Pessoa):
         cpf: str,
         especialidade: str,
         registro_profissional: str,
-        clinica: Optional["Clinica"] = None,
     ):
         super().__init__(nome, celular, cpf)
-        self.especialidade = especialidade
-        self.registro_profissional = registro_profissional
-        self.__clinica = None
-        if clinica is not None:
-            self.clinica = clinica
+        self.__especialidade = especialidade
+        self.__registro_profissional = registro_profissional
+        self.__esta_empregado = False
 
     @property
     def especialidade(self) -> str:
         return self.__especialidade
-
     @especialidade.setter
     def especialidade(self, especialidade: str) -> None:
         if not isinstance(especialidade, str) or not especialidade.strip():
@@ -36,7 +27,6 @@ class ProfissionalSaude(Pessoa):
     @property
     def registro_profissional(self) -> str:
         return self.__registro_profissional
-
     @registro_profissional.setter
     def registro_profissional(self, registro_profissional: str) -> None:
         if not isinstance(registro_profissional, str) or not registro_profissional.strip():
@@ -44,29 +34,17 @@ class ProfissionalSaude(Pessoa):
         self.__registro_profissional = registro_profissional.strip()
 
     @property
-    def clinica(self) -> Optional["Clinica"]:
-        return self.__clinica
+    def esta_empregado(self):
+        return self.__esta_empregado
+    @esta_empregado.setter
+    def esta_empregado(self, esta_empregado):
+        self.__esta_empregado = esta_empregado
 
-    @clinica.setter
-    def clinica(self, clinica: Optional["Clinica"]) -> None:
-        if clinica is None:
-            antiga = self.__clinica
-            self.__clinica = None
-            if antiga is not None and self in antiga.profissionais:
-                antiga.remover_profissional(self)
-            return
+    def __repr__(self):
+        return f"Profissional(Nome: {self.nome}, Celular: {self.celular}, CPF: {self.cpf}, Especialidade: {self.__especialidade}, Registro profissional: {self.__registro_profissional})"
 
-        from entidade.clinica import Clinica
-
-        if not isinstance(clinica, Clinica):
-            raise DadoInvalidoException("clinica", "deve ser uma instância válida de Clinica")
-
-        antiga = self.__clinica
-        self.__clinica = clinica
-        if antiga is not None and antiga != clinica and self in antiga.profissionais:
-            antiga.remover_profissional(self)
-        if self not in clinica.profissionais:
-            clinica.adicionar_profissional(self)
-
-    def possui_clinica(self) -> bool:
-        return self.__clinica is not None
+if __name__ == '__main__':
+    profissional = ProfissionalSaude('Fulano', '55 123', '001', 'dente', 'crm')
+    profissional.especialidade = 'queixo'
+    profissional.esta_empregado = True
+    print(profissional.especialidade, profissional.registro_profissional, profissional.esta_empregado)
