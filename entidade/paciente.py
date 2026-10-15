@@ -14,3 +14,11 @@ class Paciente(Pessoa):
         if not isinstance(data_nascimento, date):
             raise TypeError("data_nascimento deve ser um objeto do tipo date.")
         self.__data_nascimento = data_nascimento
+
+    def calcular_idade(self, data_referencia: date) -> int:
+        if not isinstance(data_referencia, date):
+            raise TypeError("data_referencia deve ser um objeto do tipo date.")
+        idade = data_referencia.year - self.__data_nascimento.year
+        if (data_referencia.month, data_referencia.day) < (self.__data_nascimento.month, self.__data_nascimento.day):
+            idade -= 1
+        return idade

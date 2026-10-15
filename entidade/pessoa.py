@@ -1,28 +1,39 @@
 from abc import ABC
+from excecoes.dado_invalido_exception import DadoInvalidoException
+
 
 class Pessoa(ABC):
-    def __init__(self, nome, celular, cpf):
-        self.__nome = nome
-        self.__celular = celular
-        self.__cpf = cpf
-    
+    def __init__(self, nome: str, celular: str, cpf: str):
+        self.nome = nome
+        self.celular = celular
+        self.cpf = cpf
+
     @property
-    def nome(self):
+    def nome(self) -> str:
         return self.__nome
+
     @nome.setter
-    def nome(self, nome):
-        self.__nome = nome
+    def nome(self, nome: str) -> None:
+        if not isinstance(nome, str) or not nome.strip():
+            raise DadoInvalidoException("nome", "deve ser um texto não vazio")
+        self.__nome = nome.strip()
 
     @property
-    def celular(self):
+    def celular(self) -> str:
         return self.__celular
+
     @celular.setter
-    def celular(self, celular):
-        self.__celular = celular
+    def celular(self, celular: str) -> None:
+        if not isinstance(celular, str) or not celular.strip():
+            raise DadoInvalidoException("celular", "deve ser um texto não vazio")
+        self.__celular = celular.strip()
 
     @property
-    def cpf(self):
+    def cpf(self) -> str:
         return self.__cpf
+
     @cpf.setter
-    def cpf(self, cpf):
-        self.__cpf = cpf
+    def cpf(self, cpf: str) -> None:
+        if not isinstance(cpf, str) or not cpf.strip():
+            raise DadoInvalidoException("cpf", "deve ser um texto não vazio")
+        self.__cpf = cpf.strip()
