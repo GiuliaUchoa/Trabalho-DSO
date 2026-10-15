@@ -10,6 +10,8 @@ from excecoes.profissional_ja_cadastrado_exception import (
 from excecoes.profissional_nao_encontrado_exception import ProfissionalNaoEncontradoException
 from excecoes.procedimento_ja_cadastrado_exception import ProcedimentoJaCadastradoException
 from excecoes.procedimento_nao_encontrado_exception import ProcedimentoNaoEncontradoException
+from excecoes.tipo_atendimento_ja_cadastrado_exception import TipoAtendimentoJaCadastradoException
+from excecoes.tipo_atendimento_nao_encontrado_exception import TipoAtendimentoNaoEncontradoException
 
 __all__ = [
     "ClinicaJaCadastradaException",
@@ -22,4 +24,6 @@ __all__ = [
     "ProfissionalNaoEncontradoException",
     "ProcedimentoJaCadastradoException",
     "ProcedimentoNaoEncontradoException",
+    "TipoAtendimentoJaCadastradoException",
+    "TipoAtendimentoNaoEncontradoException",
 ]
