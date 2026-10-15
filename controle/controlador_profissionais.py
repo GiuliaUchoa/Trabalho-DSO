@@ -2,6 +2,13 @@ from typing import Optional
 from controle.controlador import Controlador
 from entidade.profissional_saude import ProfissionalSaude
 from limite.tela_profissional import TelaProfissional
+from excecoes.profissional_ja_cadastrado_exception import (
+    ProfissionalJaCadastradoException,
+    RegistroJaCadastradoException,
+    CpfJaCadastradoException,
+)
+from excecoes.profissional_nao_encontrado_exception import ProfissionalNaoEncontradoException
+from excecoes.dado_invalido_exception import DadoInvalidoException
 
 
 class ControladorProfissionais(Controlador):
@@ -19,12 +26,16 @@ class ControladorProfissionais(Controlador):
         return self.__tela_profissional
 
     def buscar_profissional(self, registro_profissional: str) -> Optional[ProfissionalSaude]:
+        if not registro_profissional:
+            return None
         for prof in self.__profissionais:
             if prof.registro_profissional.strip().lower() == registro_profissional.strip().lower():
                 return prof
         return None
 
     def buscar_profissional_por_cpf(self, cpf: str) -> Optional[ProfissionalSaude]:
+        if not cpf:
+            return None
         for prof in self.__profissionais:
             if prof.cpf.strip() == cpf.strip():
                 return prof
@@ -38,14 +49,12 @@ class ControladorProfissionais(Controlador):
         especialidade: str,
         registro: str,
         clinica=None,
-    ) -> None:
+    ) -> ProfissionalSaude:
         if self.buscar_profissional_por_cpf(cpf) is not None:
-            self.__tela_profissional.mostra_mensagem("Atenção: Já existe um profissional cadastrado com este CPF!")
-            return
+            raise CpfJaCadastradoException(cpf)
 
         if self.buscar_profissional(registro) is not None:
-            self.__tela_profissional.mostra_mensagem("Atenção: Já existe um profissional cadastrado com este Registro Profissional!")
-            return
+            raise RegistroJaCadastradoException(registro)
 
         novo_profissional = ProfissionalSaude(
             nome=nome,
@@ -57,22 +66,34 @@ class ControladorProfissionais(Controlador):
         )
         self.__profissionais.append(novo_profissional)
         self.__tela_profissional.mostra_mensagem("Profissional cadastrado com sucesso!")
+        return novo_profissional
 
     def excluir_profissional(self, cpf: str) -> None:
         profissional = self.buscar_profissional_por_cpf(cpf)
-        if profissional is not None:
-            if profissional.possui_clinica():
-                profissional.clinica = None
-            self.__profissionais.remove(profissional)
-            self.__tela_profissional.mostra_mensagem("Profissional excluído com sucesso!")
-        else:
-            self.__tela_profissional.mostra_mensagem("Erro: Não foi encontrado profissional com o CPF informado.")
+        if profissional is None:
+            raise ProfissionalNaoEncontradoException(cpf)
+
+        if profissional.possui_clinica():
+            profissional.clinica = None
+        self.__profissionais.remove(profissional)
+        self.__tela_profissional.mostra_mensagem("Profissional excluído com sucesso!")
 
     def atualizar_profissional(self, cpf: str, novos_dados: dict) -> None:
         profissional = self.buscar_profissional_por_cpf(cpf)
         if profissional is None:
-            self.__tela_profissional.mostra_mensagem("Erro: Não foi encontrado profissional com o CPF informado.")
-            return
+            raise ProfissionalNaoEncontradoException(cpf)
+
+        if "registro" in novos_dados and novos_dados["registro"]:
+            outro_prof = self.buscar_profissional(novos_dados["registro"])
+            if outro_prof is not None and outro_prof != profissional:
+                raise RegistroJaCadastradoException(novos_dados["registro"])
+            profissional.registro_profissional = novos_dados["registro"]
+
+        if "cpf" in novos_dados and novos_dados["cpf"]:
+            outro_prof = self.buscar_profissional_por_cpf(novos_dados["cpf"])
+            if outro_prof is not None and outro_prof != profissional:
+                raise CpfJaCadastradoException(novos_dados["cpf"])
+            profissional.cpf = novos_dados["cpf"]
 
         if "nome" in novos_dados and novos_dados["nome"]:
             profissional.nome = novos_dados["nome"]
@@ -80,12 +101,6 @@ class ControladorProfissionais(Controlador):
             profissional.celular = novos_dados["celular"]
         if "especialidade" in novos_dados and novos_dados["especialidade"]:
             profissional.especialidade = novos_dados["especialidade"]
-        if "registro" in novos_dados and novos_dados["registro"]:
-            outro_prof = self.buscar_profissional(novos_dados["registro"])
-            if outro_prof is not None and outro_prof != profissional:
-                self.__tela_profissional.mostra_mensagem("Atenção: Já existe outro profissional com esse Registro!")
-                return
-            profissional.registro_profissional = novos_dados["registro"]
         if "clinica" in novos_dados:
             profissional.clinica = novos_dados["clinica"]
 
@@ -112,27 +127,33 @@ class ControladorProfissionais(Controlador):
 
     # Fluxos de interação com a tela
     def __incluir_profissional_fluxo(self) -> None:
-        dados = self.__tela_profissional.coletar_dados()
-        if not dados["nome"] or not dados["cpf"] or not dados["registro"]:
-            self.__tela_profissional.mostra_mensagem("Erro: Nome, CPF e Registro Profissional são obrigatórios.")
-            return
-        self.cadastrar_profissional(
-            nome=dados["nome"],
-            celular=dados["celular"],
-            cpf=dados["cpf"],
-            especialidade=dados["especialidade"],
-            registro=dados["registro"],
-            clinica=None,
-        )
+        try:
+            dados = self.__tela_profissional.coletar_dados()
+            self.cadastrar_profissional(
+                nome=dados["nome"],
+                celular=dados["celular"],
+                cpf=dados["cpf"],
+                especialidade=dados["especialidade"],
+                registro=dados["registro"],
+                clinica=None,
+            )
+        except (ProfissionalJaCadastradoException, DadoInvalidoException) as e:
+            self.__tela_profissional.mostra_mensagem(f"Erro ao cadastrar profissional: {e}")
 
     def __excluir_profissional_fluxo(self) -> None:
-        cpf = self.__tela_profissional.buscar_por_cpf()
-        self.excluir_profissional(cpf)
+        try:
+            cpf = self.__tela_profissional.buscar_por_cpf()
+            self.excluir_profissional(cpf)
+        except ProfissionalNaoEncontradoException as e:
+            self.__tela_profissional.mostra_mensagem(f"Erro ao excluir profissional: {e}")
 
     def __atualizar_profissional_fluxo(self) -> None:
-        cpf = self.__tela_profissional.buscar_por_cpf()
-        profissional = self.buscar_profissional_por_cpf(cpf)
-        if profissional is not None:
+        try:
+            cpf = self.__tela_profissional.buscar_por_cpf()
+            profissional = self.buscar_profissional_por_cpf(cpf)
+            if profissional is None:
+                raise ProfissionalNaoEncontradoException(cpf)
+
             self.__tela_profissional.mostra_profissional({
                 "nome": profissional.nome,
                 "cpf": profissional.cpf,
@@ -143,13 +164,16 @@ class ControladorProfissionais(Controlador):
             })
             novos_dados = self.__tela_profissional.coletar_novos_dados()
             self.atualizar_profissional(cpf, novos_dados)
-        else:
-            self.__tela_profissional.mostra_mensagem("Erro: Não foi encontrado profissional com o CPF informado.")
+        except (ProfissionalNaoEncontradoException, ProfissionalJaCadastradoException, DadoInvalidoException) as e:
+            self.__tela_profissional.mostra_mensagem(f"Erro ao atualizar profissional: {e}")
 
     def __buscar_profissional_fluxo(self) -> None:
-        registro = self.__tela_profissional.buscar_profissional()
-        profissional = self.buscar_profissional(registro)
-        if profissional is not None:
+        try:
+            registro = self.__tela_profissional.buscar_profissional()
+            profissional = self.buscar_profissional(registro)
+            if profissional is None:
+                raise ProfissionalNaoEncontradoException(registro)
+
             self.__tela_profissional.mostra_profissional({
                 "nome": profissional.nome,
                 "cpf": profissional.cpf,
@@ -158,8 +182,8 @@ class ControladorProfissionais(Controlador):
                 "registro_profissional": profissional.registro_profissional,
                 "clinica": profissional.clinica,
             })
-        else:
-            self.__tela_profissional.mostra_mensagem("Profissional com o Registro informado não foi encontrado.")
+        except ProfissionalNaoEncontradoException as e:
+            self.__tela_profissional.mostra_mensagem(f"Erro na busca: {e}")
 
     def abre_tela(self) -> None:
         opcoes = {

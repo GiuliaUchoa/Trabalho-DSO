@@ -19,6 +19,9 @@ class TelaProfissional(Tela):
         # Garante compatibilidade com a assinatura abstrata da superclasse Tela
         return self.opcoes_tela()
 
+    def mostrar_mensagem(self, mensagem: str) -> None:
+        self.mostra_mensagem(mensagem)
+
     def coletar_dados(self) -> dict:
         print("\n--- Cadastro de Profissional de Saúde ---")
         nome = input("Nome: ").strip()
