@@ -39,6 +39,8 @@ class ControladorPaciente:
             paciente.nome = dados['nome']
         if dados['celular'] != "":
             paciente.celular = dados['celular']
+        if dados['cpf'] != "":
+            paciente.cpf = dados['cpf']
         if dados['data_nascimento'] != "":
             paciente.data_nascimento = dados['data_nascimento']
 
@@ -47,8 +49,8 @@ class ControladorPaciente:
 
 #espaço para testes, excluir apos conclusao
 if __name__ == "__main__":
-    print('teste')
     controlador = ControladorPaciente()
     controlador.cadastrar_paciente("João Silva", "11999999999", "12345678901", "10/01/1990")
     controlador.cadastrar_paciente("Maria Souza", "21988888888", "98765432100", "15/05/1985")
+    controlador.alterar_paciente("98765432100", {'nome': '11111', 'celular': '1111111', 'cpf': '1111111', 'data_nascimento': '11/11/2002'})
     print(controlador.listar_pacientes())
