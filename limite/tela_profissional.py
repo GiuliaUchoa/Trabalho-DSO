@@ -78,7 +78,4 @@ class TelaProfissional:
         print(f"Celular: {dados.get('celular')}")
         print(f"Especialidade: {dados.get('especialidade')}")
         print(f"Registro Profissional: {dados.get('registro_profissional')}")
-        clinica = dados.get("clinica")
-        nome_clinica = clinica.nome if clinica else "Nenhuma clínica vinculada"
-        print(f"Clínica: {nome_clinica}")
         print("-" * 35)

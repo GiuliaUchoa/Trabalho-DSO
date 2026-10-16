@@ -8,9 +8,11 @@ class TelaSistema:
         print("3 - Gerenciar Profissionais de Saúde")
         print("4 - Gerenciar Procedimentos")
         print("5 - Gerenciar Tipos de Atendimento")
+        print("6 - Gerenciar Atendimentos e Pagamentos")
+        print("7 - Relatórios do Sistema")
         print("0 - Finalizar Sistema")
         print("=" * 32)
-        return self.le_numero_inteiro("Escolha a opção: ", [0, 1, 2, 3, 4, 5])
+        return self.le_numero_inteiro("Escolha a opção: ", [0, 1, 2, 3, 4, 5, 6, 7])
 
     def tela_opcoes(self) -> int:
         return self.opcoes_tela()

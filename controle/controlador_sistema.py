@@ -4,6 +4,8 @@ from controle.controlador_paciente import ControladorPaciente
 from controle.controlador_profissionais import ControladorProfissionais
 from controle.controlador_procedimento import ControladorProcedimento
 from controle.controlador_tipo_atendimento import ControladorTipoAtendimento
+from controle.controlador_atendimento import ControladorAtendimento
+from controle.controlador_relatorios import ControladorRelatorios
 
 
 class ControladorSistema:
@@ -13,6 +15,18 @@ class ControladorSistema:
         self.__controlador_profissionais = ControladorProfissionais()
         self.__controlador_procedimento = ControladorProcedimento(controlador_profissionais=self.__controlador_profissionais)
         self.__controlador_tipo_atendimento = ControladorTipoAtendimento()
+        self.__controlador_atendimento = ControladorAtendimento(
+            controlador_clinica=self.__controlador_clinica,
+            controlador_paciente=self.__controlador_paciente,
+            controlador_profissionais=self.__controlador_profissionais,
+            controlador_tipo_atendimento=self.__controlador_tipo_atendimento,
+            controlador_procedimento=self.__controlador_procedimento,
+        )
+        self.__controlador_relatorios = ControladorRelatorios(
+            controlador_clinica=self.__controlador_clinica,
+            controlador_atendimento=self.__controlador_atendimento,
+            controlador_procedimento=self.__controlador_procedimento,
+        )
         self.__tela_sistema = TelaSistema()
 
     @property
@@ -40,6 +54,14 @@ class ControladorSistema:
         return self.__controlador_tipo_atendimento
 
     @property
+    def controlador_atendimento(self) -> ControladorAtendimento:
+        return self.__controlador_atendimento
+
+    @property
+    def controlador_relatorios(self) -> ControladorRelatorios:
+        return self.__controlador_relatorios
+
+    @property
     def tela_sistema(self) -> TelaSistema:
         return self.__tela_sistema
 
@@ -61,6 +83,12 @@ class ControladorSistema:
     def abre_tipos_atendimento(self) -> None:
         self.__controlador_tipo_atendimento.abre_tela()
 
+    def abre_atendimentos(self) -> None:
+        self.__controlador_atendimento.abre_tela()
+
+    def abre_relatorios(self) -> None:
+        self.__controlador_relatorios.abre_tela()
+
     def encerra_sistema(self) -> None:
         self.__tela_sistema.mostra_mensagem("Sistema encerrado com sucesso.")
         exit(0)
@@ -72,6 +100,8 @@ class ControladorSistema:
             3: self.abre_profissionais,
             4: self.abre_procedimentos,
             5: self.abre_tipos_atendimento,
+            6: self.abre_atendimentos,
+            7: self.abre_relatorios,
             0: self.encerra_sistema,
         }
 

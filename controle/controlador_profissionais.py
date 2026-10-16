@@ -75,7 +75,6 @@ class ControladorProfissionais:
             cpf=cpf,
             especialidade=especialidade,
             registro_profissional=registro,
-            clinica=clinica,
         )
         self.__profissionais.append(novo_profissional)
         self.__tela_profissional.mostra_mensagem("Profissional cadastrado com sucesso!")
@@ -86,8 +85,6 @@ class ControladorProfissionais:
         if profissional is None:
             raise ProfissionalNaoEncontradoException(registro_profissional)
 
-        if profissional.possui_clinica():
-            profissional.clinica = None
         self.__profissionais.remove(profissional)
         self.__tela_profissional.mostra_mensagem("Profissional excluído com sucesso!")
 
@@ -116,8 +113,6 @@ class ControladorProfissionais:
             profissional.celular = novos_dados["celular"]
         if "especialidade" in novos_dados and novos_dados["especialidade"]:
             profissional.especialidade = novos_dados["especialidade"]
-        if "clinica" in novos_dados:
-            profissional.clinica = novos_dados["clinica"]
 
         self.__tela_profissional.mostra_mensagem("Profissional alterado com sucesso!")
 
@@ -136,7 +131,6 @@ class ControladorProfissionais:
                 "celular": prof.celular,
                 "especialidade": prof.especialidade,
                 "registro_profissional": prof.registro_profissional,
-                "clinica": prof.clinica,
             }
             self.__tela_profissional.mostra_profissional(dados)
 
@@ -152,7 +146,6 @@ class ControladorProfissionais:
                 cpf=dados["cpf"],
                 especialidade=dados["especialidade"],
                 registro=dados["registro"],
-                clinica=None,
             )
         except (ProfissionalJaCadastradoException, DadoInvalidoException) as e:
             self.__tela_profissional.mostra_mensagem(f"Erro ao cadastrar profissional: {e}")
@@ -177,7 +170,6 @@ class ControladorProfissionais:
                 "celular": profissional.celular,
                 "especialidade": profissional.especialidade,
                 "registro_profissional": profissional.registro_profissional,
-                "clinica": profissional.clinica,
             })
             novos_dados = self.__tela_profissional.coletar_novos_dados()
             self.alterar_profissional(registro, novos_dados)
@@ -197,7 +189,6 @@ class ControladorProfissionais:
                 "celular": profissional.celular,
                 "especialidade": profissional.especialidade,
                 "registro_profissional": profissional.registro_profissional,
-                "clinica": profissional.clinica,
             })
         except ProfissionalNaoEncontradoException as e:
             self.__tela_profissional.mostra_mensagem(f"Erro na busca: {e}")

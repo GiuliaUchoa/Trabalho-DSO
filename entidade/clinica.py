@@ -96,14 +96,10 @@ class Clinica:
 
         if profissional not in self.__profissionais:
             self.__profissionais.append(profissional)
-            if profissional.clinica != self:
-                profissional.clinica = self
 
     def remover_profissional(self, profissional: "ProfissionalSaude") -> None:
         if profissional in self.__profissionais:
             self.__profissionais.remove(profissional)
-            if profissional.clinica == self:
-                profissional.clinica = None
 
     def adicionar_atendimento(self, atendimento) -> None:
         if atendimento not in self.__atendimentos:
