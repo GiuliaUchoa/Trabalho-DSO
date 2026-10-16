@@ -130,7 +130,7 @@ class ControladorClinica:
             self.__tela_clinica.mostrar_mensagem("Nenhuma clínica cadastrada no sistema.")
             return self.__clinicas
 
-        print("\n--- Lista de Clínicas ---")
+        self.__tela_clinica.mostra_cabecalho_lista()
         for clinica in self.__clinicas:
             dados = {
                 "nome": clinica.nome,

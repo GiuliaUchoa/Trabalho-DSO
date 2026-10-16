@@ -14,6 +14,10 @@ from excecoes.tipo_atendimento_ja_cadastrado_exception import TipoAtendimentoJaC
 from excecoes.tipo_atendimento_nao_encontrado_exception import TipoAtendimentoNaoEncontradoException
 from excecoes.paciente_ja_cadastrado import PacienteJaCadastradoException
 from excecoes.paciente_nao_encontrado import PacienteNaoEncontradoException
+from excecoes.atendimento_nao_encontrado_exception import AtendimentoNaoEncontradoException
+from excecoes.horario_fora_funcionamento_exception import HorarioForaFuncionamentoException
+from excecoes.paciente_menor_idade_exception import PacienteMenorIdadeException
+from excecoes.pagamento_invalido_exception import PagamentoInvalidoException
 
 __all__ = [
     "ClinicaJaCadastradaException",
@@ -30,5 +34,8 @@ __all__ = [
     "TipoAtendimentoNaoEncontradoException",
     "PacienteJaCadastradoException",
     "PacienteNaoEncontradoException",
+    "AtendimentoNaoEncontradoException",
+    "HorarioForaFuncionamentoException",
+    "PacienteMenorIdadeException",
+    "PagamentoInvalidoException",
 ]
-

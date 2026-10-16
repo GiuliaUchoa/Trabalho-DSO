@@ -16,14 +16,8 @@ class TelaPaciente:
         print("=" * 30)
         return self.le_numero_inteiro("Escolha a opção: ", [0, 1, 2, 3, 4, 5])
 
-    def tela_opcoes(self) -> int:
-        return self.opcoes_tela()
-
-    def mostra_mensagem(self, mensagem: str) -> None:
-        print(f"\n{mensagem}")
-
     def mostrar_mensagem(self, mensagem: str) -> None:
-        self.mostra_mensagem(mensagem)
+        print(f"\n{mensagem}")
 
     def le_numero_inteiro(self, mensagem: str = "Escolha a opção: ", intervalo_valido: list[int] = None) -> int:
         while True:
@@ -36,7 +30,7 @@ class TelaPaciente:
             except ValueError:
                 print("Valor inválido! Digite apenas números inteiros.")
 
-    def le_data(self, mensagem: str = "Data de Nascimento (DD/MM/AAAA): ") -> date:
+    def le_data(self, mensagem: str = "Data de Nascimento (DD/MM/AAAA): ") -> str:
         while True:
             texto = input(mensagem).strip()
             try:
@@ -44,9 +38,9 @@ class TelaPaciente:
                 if data_obj > date.today():
                     print("A data de nascimento não pode estar no futuro!")
                     continue
-                return data_obj
+                return texto
             except ValueError:
-                print("Formato de data inválido! Digite no padrão DD/MM/AAAA (ex: 15/05/1990).")
+                print("Formato de data inválido! Digite no padrão DD/MM/AAAA (ex: 15/06/2006).")
 
     def coletar_dados(self) -> dict:
         print("\n--- Cadastro de Paciente ---")
@@ -80,7 +74,7 @@ class TelaPaciente:
                         print("A data de nascimento não pode estar no futuro!")
                         data_str = input("Nova Data de Nascimento (DD/MM/AAAA): ").strip()
                         continue
-                    data_nasc = data_obj
+                    data_nasc = data_str
                     break
                 except ValueError:
                     print("Formato de data inválido! Digite no formato DD/MM/AAAA.")
@@ -95,6 +89,9 @@ class TelaPaciente:
             novos_dados["data_nascimento"] = data_nasc
 
         return novos_dados
+
+    def mostra_cabecalho_lista(self) -> None:
+        print("\n--- Lista de Pacientes ---")
 
     def mostra_paciente(self, dados: dict) -> None:
         print("-" * 35)

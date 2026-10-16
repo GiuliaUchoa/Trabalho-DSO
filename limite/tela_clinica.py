@@ -15,14 +15,8 @@ class TelaClinica:
         print("=" * 30)
         return self.le_numero_inteiro("Escolha a opção: ", [0, 1, 2, 3, 4, 5])
 
-    def tela_opcoes(self) -> int:
-        return self.opcoes_tela()
-
-    def mostra_mensagem(self, mensagem: str) -> None:
-        print(f"\n{mensagem}")
-
     def mostrar_mensagem(self, mensagem: str) -> None:
-        self.mostra_mensagem(mensagem)
+        print(f"\n{mensagem}")
 
     def le_numero_inteiro(self, mensagem: str = "Escolha a opção: ", intervalo_valido: list[int] = None) -> int:
         while True:
@@ -101,6 +95,9 @@ class TelaClinica:
             novos_dados["hora_fechamento"] = hora_fechamento
 
         return novos_dados
+
+    def mostra_cabecalho_lista(self) -> None:
+        print("\n--- Lista de Clínicas ---")
 
     def mostra_clinica(self, dados: dict) -> None:
         print("-" * 35)

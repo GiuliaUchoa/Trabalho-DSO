@@ -54,7 +54,7 @@ class ControladorProcedimento:
 
         novo_procedimento = Procedimento(nome, descricao, custo, profissional_responsavel)
         self.__procedimentos.append(novo_procedimento)
-        self.__tela_procedimento.mostra_mensagem("Procedimento cadastrado com sucesso!")
+        self.__tela_procedimento.mostrar_mensagem("Procedimento cadastrado com sucesso!")
         return novo_procedimento
 
     def excluir_procedimento(self, nome: str):
@@ -63,7 +63,7 @@ class ControladorProcedimento:
             raise ProcedimentoNaoEncontradoException(nome)
 
         self.__procedimentos.remove(procedimento)
-        self.__tela_procedimento.mostra_mensagem("Procedimento excluído com sucesso!")
+        self.__tela_procedimento.mostrar_mensagem("Procedimento excluído com sucesso!")
 
     def alterar_procedimento(self, nome: str, novos_dados: dict):
         procedimento = self.buscar_procedimento(nome)
@@ -86,14 +86,14 @@ class ControladorProcedimento:
         if "profissional_responsavel" in novos_dados and novos_dados["profissional_responsavel"] is not None:
             procedimento.profissional_responsavel = novos_dados["profissional_responsavel"]
 
-        self.__tela_procedimento.mostra_mensagem("Procedimento alterado com sucesso!")
+        self.__tela_procedimento.mostrar_mensagem("Procedimento alterado com sucesso!")
 
     def listar_procedimentos(self):
         if not self.__procedimentos:
-            self.__tela_procedimento.mostra_mensagem("Nenhum procedimento cadastrado no sistema.")
+            self.__tela_procedimento.mostrar_mensagem("Nenhum procedimento cadastrado no sistema.")
             return self.__procedimentos
 
-        print("\n--- Lista de Procedimentos ---")
+        self.__tela_procedimento.mostra_cabecalho_lista()
         for proc in self.__procedimentos:
             dados = {
                 "nome": proc.nome,
@@ -126,14 +126,14 @@ class ControladorProcedimento:
                 profissional,
             )
         except (ProcedimentoJaCadastradoException, ProfissionalNaoEncontradoException, DadoInvalidoException, ValueError) as e:
-            self.__tela_procedimento.mostra_mensagem(f"Erro ao cadastrar procedimento: {e}")
+            self.__tela_procedimento.mostrar_mensagem(f"Erro ao cadastrar procedimento: {e}")
 
     def __excluir_procedimento_fluxo(self):
         try:
             nome = self.__tela_procedimento.seleciona_procedimento()
             self.excluir_procedimento(nome)
         except ProcedimentoNaoEncontradoException as e:
-            self.__tela_procedimento.mostra_mensagem(f"Erro ao excluir procedimento: {e}")
+            self.__tela_procedimento.mostrar_mensagem(f"Erro ao excluir procedimento: {e}")
 
     def __alterar_procedimento_fluxo(self):
         try:
@@ -169,7 +169,7 @@ class ControladorProcedimento:
             DadoInvalidoException,
             ValueError,
         ) as e:
-            self.__tela_procedimento.mostra_mensagem(f"Erro ao alterar procedimento: {e}")
+            self.__tela_procedimento.mostrar_mensagem(f"Erro ao alterar procedimento: {e}")
 
     def __buscar_procedimento_fluxo(self):
         try:
@@ -185,7 +185,7 @@ class ControladorProcedimento:
                 "profissional_responsavel": procedimento.profissional_responsavel,
             })
         except ProcedimentoNaoEncontradoException as e:
-            self.__tela_procedimento.mostra_mensagem(f"Erro na busca: {e}")
+            self.__tela_procedimento.mostrar_mensagem(f"Erro na busca: {e}")
 
     def abre_tela(self):
         opcoes = {

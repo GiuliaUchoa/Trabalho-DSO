@@ -34,11 +34,21 @@ class Atendimento:
         self.__clinica = clinica
         self.__paciente = paciente
         self.__profissional = profissional
-        self.data = data
+
+        if not isinstance(data, date):
+            raise DadoInvalidoException("data", "deve ser do tipo datetime.date")
+        self.__data = data
+
         self.__horario_inicio = horario_inicio
         self.__horario_fim = horario_fim
         self.__tipo_atendimento = tipo_atendimento
-        self.valor_total = valor_total
+
+        if not isinstance(valor_total, (int, float, Decimal)):
+            raise DadoInvalidoException("valor_total", "deve ser numérico")
+        if valor_total < 0:
+            raise DadoInvalidoException("valor_total", "não pode ser negativo")
+        self.__valor_total = float(valor_total)
+
         self.__menor_acompanhado = menor_acompanhado
 
         # Vincula atendimento na clínica
@@ -196,10 +206,6 @@ class Atendimento:
             raise DadoInvalidoException("procedimento", "não pode ser nulo")
         self.__procedimentos.append(procedimento)
 
-    def remover_procedimento(self, procedimento) -> None:
-        if procedimento in self.__procedimentos:
-            self.__procedimentos.remove(procedimento)
-
     def adicionar_pagamento(self, pagamento) -> None:
         if pagamento is None:
             raise DadoInvalidoException("pagamento", "não pode ser nulo")
@@ -216,6 +222,9 @@ class Atendimento:
             raise PagamentoInvalidoException(
                 f"Valor pago (R$ {pagamento.valor_pago:.2f}) excede o saldo restante a pagar (R$ {valor_restante:.2f})."
             )
+
+        if hasattr(pagamento, "atendimento") and pagamento.atendimento is None:
+            pagamento.atendimento = self
 
         self.__pagamentos.append(pagamento)
 

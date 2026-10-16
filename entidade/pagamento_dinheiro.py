@@ -8,5 +8,9 @@ class PagamentoDinheiro(Pagamento):
         paciente,
         data_pagamento: date,
         valor_pago: float,
+        atendimento=None,
     ):
-        super().__init__(paciente, data_pagamento, valor_pago)
+        super().__init__(paciente, data_pagamento, valor_pago, atendimento=atendimento)
+
+    def detalhe(self) -> str:
+        return "Espécie"

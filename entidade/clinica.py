@@ -19,9 +19,17 @@ class Clinica:
         self.__profissionais = []
         self.__atendimentos = []
 
-        self.nome = nome
-        self.cidade = cidade
-        self.descricao = descricao
+        if not isinstance(nome, str) or not nome.strip():
+            raise DadoInvalidoException("nome", "deve ser um texto não vazio")
+        self.__nome = nome.strip()
+
+        if not isinstance(cidade, str) or not cidade.strip():
+            raise DadoInvalidoException("cidade", "deve ser um texto não vazio")
+        self.__cidade = cidade.strip()
+
+        if not isinstance(descricao, str):
+            raise DadoInvalidoException("descricao", "deve ser um texto")
+        self.__descricao = descricao.strip()
         self.__valida_horarios(hora_abertura, hora_fechamento)
         self.__hora_abertura = hora_abertura
         self.__hora_fechamento = hora_fechamento

@@ -18,14 +18,8 @@ class TelaAtendimento:
         print("=" * 32)
         return self.le_numero_inteiro("Escolha a opção: ", [0, 1, 2, 3, 4, 5, 6, 7])
 
-    def tela_opcoes(self) -> int:
-        return self.opcoes_tela()
-
-    def mostra_mensagem(self, mensagem: str) -> None:
-        print(f"\n{mensagem}")
-
     def mostrar_mensagem(self, mensagem: str) -> None:
-        self.mostra_mensagem(mensagem)
+        print(f"\n{mensagem}")
 
     def le_numero_inteiro(self, mensagem: str = "Escolha a opção: ", intervalo_valido: list[int] = None) -> int:
         while True:
@@ -174,6 +168,9 @@ class TelaAtendimento:
             dados["bandeira"] = bandeira
 
         return dados
+
+    def mostra_cabecalho_lista(self) -> None:
+        print("\n--- Lista de Atendimentos Cadastrados ---")
 
     def mostra_atendimento(self, dados: dict) -> None:
         print("\n" + "=" * 45)

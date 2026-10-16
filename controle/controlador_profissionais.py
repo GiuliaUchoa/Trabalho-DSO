@@ -77,7 +77,7 @@ class ControladorProfissionais:
             registro_profissional=registro,
         )
         self.__profissionais.append(novo_profissional)
-        self.__tela_profissional.mostra_mensagem("Profissional cadastrado com sucesso!")
+        self.__tela_profissional.mostrar_mensagem("Profissional cadastrado com sucesso!")
         return novo_profissional
 
     def excluir_profissional(self, registro_profissional: str) -> None:
@@ -86,7 +86,7 @@ class ControladorProfissionais:
             raise ProfissionalNaoEncontradoException(registro_profissional)
 
         self.__profissionais.remove(profissional)
-        self.__tela_profissional.mostra_mensagem("Profissional excluído com sucesso!")
+        self.__tela_profissional.mostrar_mensagem("Profissional excluído com sucesso!")
 
     def alterar_profissional(self, registro_profissional: str, novos_dados: dict) -> None:
         profissional = self.buscar_profissional(registro_profissional)
@@ -114,16 +114,16 @@ class ControladorProfissionais:
         if "especialidade" in novos_dados and novos_dados["especialidade"]:
             profissional.especialidade = novos_dados["especialidade"]
 
-        self.__tela_profissional.mostra_mensagem("Profissional alterado com sucesso!")
+        self.__tela_profissional.mostrar_mensagem("Profissional alterado com sucesso!")
 
     atualizar_profissional = alterar_profissional
 
     def listar_profissionais(self) -> list[ProfissionalSaude]:
         if not self.__profissionais:
-            self.__tela_profissional.mostra_mensagem("Nenhum profissional cadastrado no sistema.")
+            self.__tela_profissional.mostrar_mensagem("Nenhum profissional cadastrado no sistema.")
             return self.__profissionais
 
-        print("\n--- Lista de Profissionais de Saúde ---")
+        self.__tela_profissional.mostra_cabecalho_lista()
         for prof in self.__profissionais:
             dados = {
                 "nome": prof.nome,
@@ -148,14 +148,14 @@ class ControladorProfissionais:
                 registro=dados["registro"],
             )
         except (ProfissionalJaCadastradoException, DadoInvalidoException) as e:
-            self.__tela_profissional.mostra_mensagem(f"Erro ao cadastrar profissional: {e}")
+            self.__tela_profissional.mostrar_mensagem(f"Erro ao cadastrar profissional: {e}")
 
     def __excluir_profissional_fluxo(self) -> None:
         try:
             registro = self.__tela_profissional.buscar_profissional()
             self.excluir_profissional(registro)
         except ProfissionalNaoEncontradoException as e:
-            self.__tela_profissional.mostra_mensagem(f"Erro ao excluir profissional: {e}")
+            self.__tela_profissional.mostrar_mensagem(f"Erro ao excluir profissional: {e}")
 
     def __alterar_profissional_fluxo(self) -> None:
         try:
@@ -174,7 +174,7 @@ class ControladorProfissionais:
             novos_dados = self.__tela_profissional.coletar_novos_dados()
             self.alterar_profissional(registro, novos_dados)
         except (ProfissionalNaoEncontradoException, ProfissionalJaCadastradoException, DadoInvalidoException) as e:
-            self.__tela_profissional.mostra_mensagem(f"Erro ao alterar profissional: {e}")
+            self.__tela_profissional.mostrar_mensagem(f"Erro ao alterar profissional: {e}")
 
     def __buscar_profissional_fluxo(self) -> None:
         try:
@@ -191,7 +191,7 @@ class ControladorProfissionais:
                 "registro_profissional": profissional.registro_profissional,
             })
         except ProfissionalNaoEncontradoException as e:
-            self.__tela_profissional.mostra_mensagem(f"Erro na busca: {e}")
+            self.__tela_profissional.mostrar_mensagem(f"Erro na busca: {e}")
 
     def abre_tela(self) -> None:
         opcoes = {

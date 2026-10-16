@@ -110,7 +110,7 @@ class ControladorAtendimento:
         )
         self.__contador_id += 1
         self.__atendimentos.append(novo_atendimento)
-        self.__tela_atendimento.mostra_mensagem(
+        self.__tela_atendimento.mostrar_mensagem(
             f"Atendimento #{novo_atendimento.id_atendimento} agendado com sucesso para {data_atendimento.strftime('%d/%m/%Y')}!"
         )
         return novo_atendimento
@@ -124,7 +124,7 @@ class ControladorAtendimento:
             atendimento.clinica.remover_atendimento(atendimento)
 
         self.__atendimentos.remove(atendimento)
-        self.__tela_atendimento.mostra_mensagem(f"Atendimento #{id_atendimento} cancelado/excluído com sucesso!")
+        self.__tela_atendimento.mostrar_mensagem(f"Atendimento #{id_atendimento} cancelado/excluído com sucesso!")
 
     def alterar_atendimento(self, id_atendimento: int, novos_dados: dict) -> None:
         atendimento = self.buscar_atendimento_por_id(id_atendimento)
@@ -143,7 +143,7 @@ class ControladorAtendimento:
         if "valor_total" in novos_dados and novos_dados["valor_total"] is not None:
             atendimento.valor_total = novos_dados["valor_total"]
 
-        self.__tela_atendimento.mostra_mensagem(f"Atendimento #{id_atendimento} atualizado com sucesso!")
+        self.__tela_atendimento.mostrar_mensagem(f"Atendimento #{id_atendimento} atualizado com sucesso!")
 
     def listar_atendimentos(self) -> list[Atendimento]:
         return self.__atendimentos
@@ -160,7 +160,7 @@ class ControladorAtendimento:
             raise ProcedimentoNaoEncontradoException(nome_procedimento)
 
         atendimento.adicionar_procedimento(procedimento)
-        self.__tela_atendimento.mostra_mensagem(
+        self.__tela_atendimento.mostrar_mensagem(
             f"Procedimento '{procedimento.nome}' (R$ {procedimento.custo:.2f}) registrado com sucesso no Atendimento #{id_atendimento}!"
         )
 
@@ -186,6 +186,7 @@ class ControladorAtendimento:
                 paciente=paciente,
                 data_pagamento=data_pagamento,
                 valor_pago=valor_pago,
+                atendimento=atendimento,
             )
         elif forma_pagamento == 2:  # PIX
             cpf_pagador = dados_pagamento.get("cpf_pagador") or paciente.cpf
@@ -194,6 +195,7 @@ class ControladorAtendimento:
                 data_pagamento=data_pagamento,
                 valor_pago=valor_pago,
                 cpf_pagador=cpf_pagador,
+                atendimento=atendimento,
             )
         elif forma_pagamento == 3:  # Cartão
             numero_cartao = dados_pagamento.get("numero_cartao", "")
@@ -204,12 +206,13 @@ class ControladorAtendimento:
                 valor_pago=valor_pago,
                 numero_cartao=numero_cartao,
                 bandeira=bandeira,
+                atendimento=atendimento,
             )
         else:
             raise PagamentoInvalidoException("Modalidade de pagamento inválida.")
 
         atendimento.adicionar_pagamento(pagamento)
-        self.__tela_atendimento.mostra_mensagem(
+        self.__tela_atendimento.mostrar_mensagem(
             f"Pagamento de R$ {valor_pago:.2f} registrado com sucesso! Saldo restante: R$ {atendimento.calcular_valor_a_pagar():.2f}."
         )
 
@@ -225,13 +228,7 @@ class ControladorAtendimento:
         pags = []
         for pg in atend.pagamentos:
             tipo_nome = pg.__class__.__name__.replace("Pagamento", "")
-            detalhe = ""
-            if isinstance(pg, PagamentoPix):
-                detalhe = f"CPF Pagador: {pg.cpf_pagador}"
-            elif isinstance(pg, PagamentoCartao):
-                detalhe = f"Cartão final {pg.numero_cartao[-4:] if len(pg.numero_cartao) >= 4 else pg.numero_cartao} ({pg.bandeira})"
-            elif isinstance(pg, PagamentoDinheiro):
-                detalhe = "Espécie"
+            detalhe = pg.detalhe() if hasattr(pg, "detalhe") else ""
 
             pags.append({
                 "tipo": tipo_nome,
@@ -294,14 +291,14 @@ class ControladorAtendimento:
             HorarioForaFuncionamentoException,
             DadoInvalidoException,
         ) as e:
-            self.__tela_atendimento.mostra_mensagem(f"Erro ao agendar atendimento: {e}")
+            self.__tela_atendimento.mostrar_mensagem(f"Erro ao agendar atendimento: {e}")
 
     def __excluir_atendimento_fluxo(self) -> None:
         try:
             id_atend = self.__tela_atendimento.buscar_atendimento()
             self.excluir_atendimento(id_atend)
         except AtendimentoNaoEncontradoException as e:
-            self.__tela_atendimento.mostra_mensagem(f"Erro ao excluir atendimento: {e}")
+            self.__tela_atendimento.mostrar_mensagem(f"Erro ao excluir atendimento: {e}")
 
     def __alterar_atendimento_fluxo(self) -> None:
         try:
@@ -315,14 +312,14 @@ class ControladorAtendimento:
             if novos_dados:
                 self.alterar_atendimento(id_atend, novos_dados)
         except (AtendimentoNaoEncontradoException, HorarioForaFuncionamentoException, DadoInvalidoException) as e:
-            self.__tela_atendimento.mostra_mensagem(f"Erro ao alterar atendimento: {e}")
+            self.__tela_atendimento.mostrar_mensagem(f"Erro ao alterar atendimento: {e}")
 
     def __listar_atendimentos_fluxo(self) -> None:
         if not self.__atendimentos:
-            self.__tela_atendimento.mostra_mensagem("Nenhum atendimento cadastrado no sistema.")
+            self.__tela_atendimento.mostrar_mensagem("Nenhum atendimento cadastrado no sistema.")
             return
 
-        print("\n--- Lista de Atendimentos Cadastrados ---")
+        self.__tela_atendimento.mostra_cabecalho_lista()
         for atend in self.__atendimentos:
             self.__tela_atendimento.mostra_atendimento(self.__montar_dados_atendimento_tela(atend))
 
@@ -332,7 +329,7 @@ class ControladorAtendimento:
         if atend is not None:
             self.__tela_atendimento.mostra_atendimento(self.__montar_dados_atendimento_tela(atend))
         else:
-            self.__tela_atendimento.mostra_mensagem(f"Atendimento com código #{id_atend} não foi encontrado.")
+            self.__tela_atendimento.mostrar_mensagem(f"Atendimento com código #{id_atend} não foi encontrado.")
 
     def __registrar_procedimento_fluxo(self) -> None:
         try:
@@ -345,7 +342,7 @@ class ControladorAtendimento:
             nome_proc = self.__tela_atendimento.coletar_nome_procedimento()
             self.registra_procedimento(id_atend, nome_proc)
         except (AtendimentoNaoEncontradoException, ProcedimentoNaoEncontradoException, DadoInvalidoException) as e:
-            self.__tela_atendimento.mostra_mensagem(f"Erro ao registrar procedimento: {e}")
+            self.__tela_atendimento.mostrar_mensagem(f"Erro ao registrar procedimento: {e}")
 
     def __realizar_pagamento_fluxo(self) -> None:
         try:
@@ -356,7 +353,7 @@ class ControladorAtendimento:
 
             saldo_restante = atend.calcular_valor_a_pagar()
             if saldo_restante <= 0:
-                self.__tela_atendimento.mostra_mensagem(f"Atendimento #{id_atend} já está integralmente quitado!")
+                self.__tela_atendimento.mostrar_mensagem(f"Atendimento #{id_atend} já está integralmente quitado!")
                 return
 
             self.__tela_atendimento.mostra_atendimento(self.__montar_dados_atendimento_tela(atend))
@@ -371,7 +368,7 @@ class ControladorAtendimento:
             )
             self.realizar_pagamento(id_atend, forma, dados_pag)
         except (AtendimentoNaoEncontradoException, PagamentoInvalidoException, DadoInvalidoException) as e:
-            self.__tela_atendimento.mostra_mensagem(f"Erro ao processar pagamento: {e}")
+            self.__tela_atendimento.mostrar_mensagem(f"Erro ao processar pagamento: {e}")
 
     def abre_tela(self) -> None:
         opcoes = {

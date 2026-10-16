@@ -12,14 +12,9 @@ class TelaTipoAtendimento:
         print("=" * 30)
         return self.le_numero_inteiro("Escolha a opção: ", [0, 1, 2, 3, 4, 5])
 
-    def tela_opcoes(self):
-        return self.opcoes_tela()
-
-    def mostra_mensagem(self, mensagem: str) -> None:
-        print(f"\n{mensagem}")
 
     def mostrar_mensagem(self, mensagem: str) -> None:
-        self.mostra_mensagem(mensagem)
+        print(f"\n{mensagem}")
 
     def le_numero_inteiro(self, mensagem: str = "Escolha a opção: ", intervalo_valido: list[int] = None) -> int:
         while True:
@@ -44,6 +39,9 @@ class TelaTipoAtendimento:
     def coletar_novos_dados(self):
         print("\n--- Alteração de Tipo de Atendimento ---")
         return input("Novo nome do tipo de atendimento: ").strip()
+
+    def mostra_cabecalho_lista(self) -> None:
+        print("\n--- Lista de Tipos de Atendimento ---")
 
     def mostra_tipo_atendimento(self, dados):
         print("-" * 35)

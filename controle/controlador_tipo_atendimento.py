@@ -40,7 +40,7 @@ class ControladorTipoAtendimento:
 
         novo_tipo = TipoAtendimento(nome_tipo)
         self.__tipos_atendimentos.append(novo_tipo)
-        self.__tela_tipo_atendimento.mostra_mensagem("Tipo de atendimento cadastrado com sucesso!")
+        self.__tela_tipo_atendimento.mostrar_mensagem("Tipo de atendimento cadastrado com sucesso!")
         return novo_tipo
 
     def excluir_tipo_atendimento(self, nome_tipo: str):
@@ -49,7 +49,7 @@ class ControladorTipoAtendimento:
             raise TipoAtendimentoNaoEncontradoException(nome_tipo)
 
         self.__tipos_atendimentos.remove(tipo)
-        self.__tela_tipo_atendimento.mostra_mensagem("Tipo de atendimento excluído com sucesso!")
+        self.__tela_tipo_atendimento.mostrar_mensagem("Tipo de atendimento excluído com sucesso!")
 
     def alterar_tipo_atendimento(self, nome_tipo: str, novo_nome: str):
         tipo = self.buscar_tipo_atendimento(nome_tipo)
@@ -64,14 +64,14 @@ class ControladorTipoAtendimento:
             raise TipoAtendimentoJaCadastradoException(novo_nome)
 
         tipo.nome_tipo = novo_nome
-        self.__tela_tipo_atendimento.mostra_mensagem("Tipo de atendimento alterado com sucesso!")
+        self.__tela_tipo_atendimento.mostrar_mensagem("Tipo de atendimento alterado com sucesso!")
 
     def listar_tipos(self):
         if not self.__tipos_atendimentos:
-            self.__tela_tipo_atendimento.mostra_mensagem("Nenhum tipo de atendimento cadastrado no sistema.")
+            self.__tela_tipo_atendimento.mostrar_mensagem("Nenhum tipo de atendimento cadastrado no sistema.")
             return self.__tipos_atendimentos
 
-        print("\n--- Lista de Tipos de Atendimento ---")
+        self.__tela_tipo_atendimento.mostra_cabecalho_lista()
         for tipo in self.__tipos_atendimentos:
             self.__tela_tipo_atendimento.mostra_tipo_atendimento({"nome_tipo": tipo.nome_tipo})
 
@@ -85,14 +85,14 @@ class ControladorTipoAtendimento:
             dados = self.__tela_tipo_atendimento.coletar_dados()
             self.cadastrar_tipo_atendimento(dados["nome_tipo"])
         except (TipoAtendimentoJaCadastradoException, DadoInvalidoException) as e:
-            self.__tela_tipo_atendimento.mostra_mensagem(f"Erro ao cadastrar tipo de atendimento: {e}")
+            self.__tela_tipo_atendimento.mostrar_mensagem(f"Erro ao cadastrar tipo de atendimento: {e}")
 
     def __excluir_tipo_atendimento_fluxo(self):
         try:
             nome_tipo = self.__tela_tipo_atendimento.seleciona_tipo_atendimento()
             self.excluir_tipo_atendimento(nome_tipo)
         except TipoAtendimentoNaoEncontradoException as e:
-            self.__tela_tipo_atendimento.mostra_mensagem(f"Erro ao excluir tipo de atendimento: {e}")
+            self.__tela_tipo_atendimento.mostrar_mensagem(f"Erro ao excluir tipo de atendimento: {e}")
 
     def __alterar_tipo_atendimento_fluxo(self):
         try:
@@ -106,7 +106,7 @@ class ControladorTipoAtendimento:
             if novo_nome:
                 self.alterar_tipo_atendimento(nome_tipo, novo_nome)
         except (TipoAtendimentoNaoEncontradoException, TipoAtendimentoJaCadastradoException, DadoInvalidoException) as e:
-            self.__tela_tipo_atendimento.mostra_mensagem(f"Erro ao alterar tipo de atendimento: {e}")
+            self.__tela_tipo_atendimento.mostrar_mensagem(f"Erro ao alterar tipo de atendimento: {e}")
 
     def __buscar_tipo_atendimento_fluxo(self):
         try:
@@ -117,7 +117,7 @@ class ControladorTipoAtendimento:
 
             self.__tela_tipo_atendimento.mostra_tipo_atendimento({"nome_tipo": tipo.nome_tipo})
         except TipoAtendimentoNaoEncontradoException as e:
-            self.__tela_tipo_atendimento.mostra_mensagem(f"Erro na busca: {e}")
+            self.__tela_tipo_atendimento.mostrar_mensagem(f"Erro na busca: {e}")
 
     def abre_tela(self):
         opcoes = {

@@ -90,7 +90,7 @@ class ControladorSistema:
         self.__controlador_relatorios.abre_tela()
 
     def encerra_sistema(self) -> None:
-        self.__tela_sistema.mostra_mensagem("Sistema encerrado com sucesso.")
+        self.__tela_sistema.mostrar_mensagem("Sistema encerrado com sucesso.")
         exit(0)
 
     def abre_tela(self) -> None:

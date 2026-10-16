@@ -4,10 +4,23 @@ from excecoes.dado_invalido_exception import DadoInvalidoException
 
 class Procedimento:
     def __init__(self, nome: str, descricao: str, custo: float, profissional_responsavel: ProfissionalSaude):
-        self.nome = nome
-        self.descricao = descricao
-        self.custo = custo
-        self.profissional_responsavel = profissional_responsavel
+        if not isinstance(nome, str) or not nome.strip():
+            raise DadoInvalidoException("nome", "deve ser um texto não vazio")
+        self.__nome = nome.strip()
+
+        if not isinstance(descricao, str) or not descricao.strip():
+            raise DadoInvalidoException("descricao", "deve ser um texto não vazio")
+        self.__descricao = descricao.strip()
+
+        if not isinstance(custo, (int, float)):
+            raise DadoInvalidoException("custo", "deve ser um valor numérico")
+        if custo < 0:
+            raise DadoInvalidoException("custo", "não pode ser negativo")
+        self.__custo = float(custo)
+
+        if not isinstance(profissional_responsavel, ProfissionalSaude):
+            raise DadoInvalidoException("profissional_responsavel", "deve ser um profissional de saúde válido")
+        self.__profissional_responsavel = profissional_responsavel
 
     @property
     def nome(self):

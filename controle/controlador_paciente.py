@@ -45,7 +45,7 @@ class ControladorPaciente:
 
         novo_paciente = Paciente(nome, celular, cpf, data_nascimento)
         self.__pacientes.append(novo_paciente)
-        self.__tela_paciente.mostra_mensagem("Paciente cadastrado com sucesso!")
+        self.__tela_paciente.mostrar_mensagem("Paciente cadastrado com sucesso!")
         return novo_paciente
 
     def excluir_paciente(self, cpf: str) -> None:
@@ -53,7 +53,7 @@ class ControladorPaciente:
         if paciente is None:
             raise PacienteNaoEncontradoException(cpf)
         self.__pacientes.remove(paciente)
-        self.__tela_paciente.mostra_mensagem(f"Paciente com CPF '{cpf}' excluído com sucesso!")
+        self.__tela_paciente.mostrar_mensagem(f"Paciente com CPF '{cpf}' excluído com sucesso!")
 
     def alterar_paciente(self, cpf: str, dados: dict) -> None:
         paciente = self.buscar_paciente_por_cpf(cpf)
@@ -67,17 +67,17 @@ class ControladorPaciente:
         if dados.get("data_nascimento"):
             paciente.data_nascimento = dados["data_nascimento"]
 
-        self.__tela_paciente.mostra_mensagem("Paciente atualizado com sucesso!")
+        self.__tela_paciente.mostrar_mensagem("Paciente atualizado com sucesso!")
 
     def listar_pacientes(self) -> list[Paciente]:
         return self.__pacientes
 
     def listar_pacientes_tela(self) -> list[Paciente]:
         if not self.__pacientes:
-            self.__tela_paciente.mostra_mensagem("Nenhum paciente cadastrado no sistema.")
+            self.__tela_paciente.mostrar_mensagem("Nenhum paciente cadastrado no sistema.")
             return self.__pacientes
 
-        print("\n--- Lista de Pacientes ---")
+        self.__tela_paciente.mostra_cabecalho_lista()
         for paciente in self.__pacientes:
             self.__tela_paciente.mostra_paciente({
                 "nome": paciente.nome,
@@ -98,14 +98,14 @@ class ControladorPaciente:
                 data_nascimento=dados["data_nascimento"],
             )
         except (PacienteJaCadastradoException, Exception) as e:
-            self.__tela_paciente.mostra_mensagem(f"Erro ao cadastrar paciente: {e}")
+            self.__tela_paciente.mostrar_mensagem(f"Erro ao cadastrar paciente: {e}")
 
     def __excluir_paciente_fluxo(self) -> None:
         try:
             cpf = self.__tela_paciente.buscar_paciente()
             self.excluir_paciente(cpf)
         except PacienteNaoEncontradoException as e:
-            self.__tela_paciente.mostra_mensagem(f"Erro ao excluir paciente: {e}")
+            self.__tela_paciente.mostrar_mensagem(f"Erro ao excluir paciente: {e}")
 
     def __alterar_paciente_fluxo(self) -> None:
         try:
@@ -124,7 +124,7 @@ class ControladorPaciente:
             if novos_dados:
                 self.alterar_paciente(cpf, novos_dados)
         except PacienteNaoEncontradoException as e:
-            self.__tela_paciente.mostra_mensagem(f"Erro ao alterar paciente: {e}")
+            self.__tela_paciente.mostrar_mensagem(f"Erro ao alterar paciente: {e}")
 
     def __buscar_paciente_fluxo(self) -> None:
         cpf = self.__tela_paciente.buscar_paciente()
@@ -137,7 +137,7 @@ class ControladorPaciente:
                 "data_nascimento": paciente.data_nascimento,
             })
         else:
-            self.__tela_paciente.mostra_mensagem(f"Paciente com CPF '{cpf}' não encontrado.")
+            self.__tela_paciente.mostrar_mensagem(f"Paciente com CPF '{cpf}' não encontrado.")
 
     def abre_tela(self) -> None:
         opcoes = {
